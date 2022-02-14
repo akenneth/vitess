@@ -1213,9 +1213,9 @@ var (
 		input:  "alter table t2 add primary key `zzz` (id)",
 		output: "alter table t2 add primary key (id)",
 	}, {
-		input:      "alter table a partition by range (id) (partition p0 values less than (10), partition p1 values less than (maxvalue))",
-		output:     "alter table a",
-		partialDDL: true,
+		input: "alter table a partition by hash (id) partitions 4",
+	}, {
+		input: "alter table a partition by range (id) (partition p0 values less than (10), partition p1 values less than (maxvalue))",
 	}, {
 		input:      "create database a garbage values",
 		output:     "create database a",
@@ -1537,7 +1537,11 @@ var (
 		input:  "create definer = 'sa'@b.c.d view a(b,c,d) as select * from e",
 		output: "create definer = 'sa'@b.c.d view a(b, c, d) as select * from e",
 	}, {
+		input: "create /*vt+ strategy=online */ or replace view v as select a, b, c from t",
+	}, {
 		input: "alter view a as select * from t",
+	}, {
+		input: "alter /*vt+ strategy=online */ view a as select * from t",
 	}, {
 		input: "alter algorithm = merge definer = m@172.0.1.01 sql security definer view a as select * from t with local check option",
 	}, {
@@ -1549,6 +1553,8 @@ var (
 	}, {
 		input:  "drop view a,B,c",
 		output: "drop view a, b, c",
+	}, {
+		input: "drop /*vt+ strategy=online */ view if exists v",
 	}, {
 		input: "drop table a",
 	}, {
