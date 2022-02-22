@@ -736,6 +736,12 @@ func (er *EvalResult) setBindVar1(typ sqltypes.Type, value []byte, collation col
 			uval = 0
 		}
 		er.setUint64(uval)
+	case sqltypes.Uint32:
+		ival, err := strconv.ParseUint(string(value), 10, 32)
+		if err != nil {
+			ival = 0
+		}		
+		er.setUint64(ival)
 	case sqltypes.Float64:
 		fval, err := strconv.ParseFloat(string(value), 64)
 		if err != nil {
